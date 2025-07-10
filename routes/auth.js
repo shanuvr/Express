@@ -70,8 +70,8 @@ router.get('/update/:id', async(req,res)=>{
         })
         res.redirect('/adminHome')
 
-    }catch(err){
-        console.log(err);
+    }catch(error){
+        console.log(error);
         
     }
  })
