@@ -14,6 +14,10 @@ const handleLogin = async (req, res) => {
         id:userFound._id,
         name:userFound.name,
         email:userFound.email,
+<<<<<<< HEAD
+=======
+        phone:userFound.phone,
+>>>>>>> 833d60a (final)
         role:userFound.role
     }
     res.redirect('/adminHome')
@@ -29,7 +33,12 @@ const handleLogin = async (req, res) => {
         id:userFound._id,
         name:userFound.name,
         email:userFound.email,
+<<<<<<< HEAD
         role:userFound.role
+=======
+        role:userFound.role,
+        phone:userFound.phone
+>>>>>>> 833d60a (final)
 
     }
     console.log(req.session.user);

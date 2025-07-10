@@ -17,7 +17,8 @@ router.get("/logout", handleLogout);
 router.get("/adminHome", async (req, res) => {
   if (req.session.user) {
     let users = await userModel.find();
-
+    console.log(users);
+    
     res.render("adminHome", { users });
   } else {
     res.redirect("/");
@@ -25,7 +26,7 @@ router.get("/adminHome", async (req, res) => {
 });
 router.get("/userHome", (req, res) => {
   if (req.session.user) {
-    res.render("userHome");
+    res.render("userHome",{user:req.session.user});
   } else {
     res.redirect("/");
   }
@@ -44,8 +45,8 @@ router.get("/delete/:id", async (req, res) => {
     const userId = req.params.id;
     await userModel.findByIdAndDelete(userId);
     res.redirect("/adminHome");
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 });
 
