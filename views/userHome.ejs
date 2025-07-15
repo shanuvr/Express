@@ -2,46 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Home - Minimal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Page</title>
+
+  
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100 text-gray-900">
 
-  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center">
-    <svg class="w-12 h-12 text-blue-500 mb-2" fill="none" viewBox="0 0 64 64">
-      <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="4" />
-      <path d="M24 32l8 8 8-8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <h2 class="text-2xl font-bold text-gray-800 mb-1">Hello, <%= user.name %>!</h2>
-    <p class="text-gray-400 text-sm mb-8">Welcome to your dashboard</p>
-    <div class="w-full space-y-4 mb-8">
-      <div class="flex justify-between items-center">
-        <span class="text-gray-500 font-semibold">Name:</span>
-        <span class="text-gray-800 font-medium"><%= user.name %></span>
-      </div>
-      <div class="flex justify-between items-center">
-        <span class="text-gray-500 font-semibold">Email:</span>
-        <span class="text-gray-800 font-medium"><%= user.email %></span>
-      </div>
-      <div class="flex justify-between items-center">
-        <span class="text-gray-500 font-semibold">Phone:</span>
 
-        <span class="text-gray-800 font-medium"><%= user.phone %></span>
+  <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
 
+   
+      <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
+        <div class="text-2xl font-bold text-blue-600">MyShop</div>
+        <div class="flex flex-col md:flex-row md:space-x-6 text-sm text-gray-700">
+          <div><span class="font-semibold">User:</span> <%=user.name %></div>
+          <div><span class="font-semibold">Phone:</span> <%=user.phone %></div>
+          <div><span class="font-semibold">Email:</span> <%=user.email %></div>
+        </div>
       </div>
+
+      <div>
+        <form action="/logout" method="get">
+          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+            Logout
+          </button>
+        </form>
+      </div>
+
     </div>
-    <button class="w-full py-2 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition" onclick="logoutuser()">
-      Logout
-    </button>
-  </div>
+  </nav>
 
-  <script>
-    function logoutuser(){
-      fetch('/logout').then(()=>{
-        window.location.href = '/'
-      }).catch((err)=>{console.log(err);})
-    }
-  </script>
+
+  <main class="max-w-7xl mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-6">Featured Products</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% product.forEach((product)=>{ %>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold text-blue-700 mb-2"><%=product.name %></h3>
+          <p class="text-sm text-gray-500 mb-1"><strong>Category:</strong> <%=product.category %></p>
+          <p class="text-lg font-bold text-green-600 mb-2"><%=product.price %></p>
+          <p class="text-gray-700"><%=product.description %></p>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+
 </body>
 </html>

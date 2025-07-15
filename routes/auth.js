@@ -3,10 +3,18 @@ import {
   showLogin,
   handleLogin,
   handleLogout,
+  adminHome,
+  userHome,
+  submit,
+  deleteUser,
+  updateUser,
+  UpdateUser2,
+  
 } from "../controllers/authController.js";
+import {insertProduct,showProduct,deleteProduct,editProduct,updateProduct} from '../controllers/productController.js'
 import userModel from "../models/user.js";
 import productModel from "../models/product.js";
-import { name } from "ejs";
+
 const router = express.Router();
 
 router.get("/", showLogin);
@@ -15,98 +23,32 @@ router.post("/login", handleLogin);
 
 router.get("/logout", handleLogout);
 
-router.get("/adminHome", async (req, res) => {
-  if (req.session.user) {
-    let users = await userModel.find();
-    res.render("adminHome", { users });
-  } else {
-    res.redirect("/");
-  }
-});
-router.get("/userHome", (req, res) => {
-  if (req.session.user) {
-    res.render("userHome", { user: req.session.user });
-  } else {
-    res.redirect("/");
-  }
-});
+router.get("/adminHome", adminHome)
+
+router.get("/userHome", userHome)
+
 router.get("/addUser", (req, res) => {
   res.render("addUser");
 });
 
-router.post("/submit", async (req, res) => {
-  await userModel.insertOne(req.body);
-  res.redirect("/adminHome");
-});
+router.post("/submit",submit)
 
-router.get("/delete/:id", async (req, res) => {
-  try {
-    const userId = req.params.id;
-    await userModel.findByIdAndDelete(userId);
-    res.redirect("/adminHome");
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get("/delete/:id",deleteUser )
 
-router.get("/update/:id", async (req, res) => {
-  const userId = req.params.id;
-  let updateUser = await userModel.findById(userId);
-
-  res.render("editUser", { user: updateUser });
-});
-router.post("/update-user/:id", async (req, res) => {
-  try {
-    const userId = req.params.id;
-    await userModel.findByIdAndUpdate(userId, {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
-      role: req.body.role,
-    });
-    res.redirect("/adminHome");
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.get("/update/:id", updateUser);
+router.post("/update-user/:id", UpdateUser2)
 
 router.get("/addproduct", (req, res) => {
   res.render("addProduct");
 });
 
-router.post("/insertProducts", async (req, res) => {
-  console.log(req.body);
+router.post("/insertProducts",insertProduct)
 
-  await productModel.insertOne(req.body);
-  res.redirect("adminHome");
-});
+router.get("/showproducts", showProduct)
 
-router.get("/showproducts", async (req, res) => {
-  const products = await productModel.find();
-  res.render("showproducts", { products });
-});
-router.get("/delete2/:id", async (req, res) => {
-  const id = req.params.id;
-  await productModel.findByIdAndDelete(id);
-  res.redirect("/showproducts");
-});
-router.get("/edite2/:id", async(req, res) => {
-  const productId = req.params.id
-let product = await productModel.findById(productId)
-console.log(product);
+router.get("/delete2/:id", deleteProduct)
 
-  res.render("editproduct",{product:product});
-});
-router.post('/update-edite/:id',async(req,res)=>{
-  const productId = req.params.id
-  await productModel.findByIdAndUpdate(productId,{
-    name: req.body.name,
-    price:req.body.price,
-    category:req.body.category,
-    price:req.body.price,
-    description:req.body.description
-  })
-  res.redirect('/showproducts')
-})  
+router.get("/edite2/:id", editProduct)
+
+router.post('/update-edite/:id',updateProduct) 
 export default router;
