@@ -11,7 +11,7 @@ const handleLogin = async (req, res) => {
   if (!userFound) {
     res.send("user not found");
   } else if (password == userFound.password && userFound.role == "admin") {
-    req.session.user = {
+    req.session.admin = {
       id: userFound._id,
       name: userFound.name,
       email: userFound.email,
@@ -49,7 +49,7 @@ const addUser = (req, res) => {
 };
 
 const adminHome =async (req, res) => {
-  if (req.session.user) {
+  if (req.session.admin) {
     let users = await userModel.find();
     res.render("adminHome", { users });
   } else {
@@ -59,8 +59,9 @@ const adminHome =async (req, res) => {
 
 const userHome = async(req, res) => {
   if (req.session.user) {
+    
      const products = await productModel.find();
-    res.render("userHome", { user: req.session.user,product:products });
+    res.render("userHome", { user:req.session.user,product:products });
   } else {
     res.redirect("/");
   }
