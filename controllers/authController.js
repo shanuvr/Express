@@ -1,5 +1,6 @@
 import userModel from "../models/user.js";
 import productModel from "../models/product.js";
+import bcrypt from 'bcrypt'
 
 const showLogin = (req, res) => {
   res.render("login");
@@ -10,7 +11,7 @@ const handleLogin = async (req, res) => {
   const userFound = await userModel.findOne({ email });
   if (!userFound) {
     res.send("user not found");
-  } else if (password == userFound.password && userFound.role == "admin") {
+  } else if (await(bcrypt.compare(password,userFound.password)) && userFound.role == "admin") {
     req.session.admin = {
       id: userFound._id,
       name: userFound.name,
@@ -23,8 +24,8 @@ const handleLogin = async (req, res) => {
     res.send("incorrect passowrd");
   } else if (password !== userFound.password && userFound.role == "user") {
     res.send("incorrect passowrd");
-  } else if (password == userFound.password && userFound.role == "user") {
-    console.log(req.session);
+  } else if (await bcrypt.compare(password,userFound.password) && userFound.role == "user") {
+    
 
     req.session.user = {
       id: userFound._id,
@@ -33,7 +34,7 @@ const handleLogin = async (req, res) => {
       role: userFound.role,
       phone: userFound.phone,
     };
-    console.log(req.session.user);
+   
     res.redirect("/userHome");
   }
 };
@@ -49,6 +50,7 @@ const addUser = (req, res) => {
 };
 
 const adminHome =async (req, res) => {
+  
   if (req.session.admin) {
     let users = await userModel.find();
     res.render("adminHome", { users });
@@ -68,8 +70,19 @@ const userHome = async(req, res) => {
 };
 
 const submit =  async (req, res) => {
-  await userModel.insertOne(req.body);
+  
+   const{name,email,phone,password,role} = req.body
+   const hashpass = await bcrypt.hash(password,10)
+  await userModel.insertOne({
+    name:name,
+    email:email,
+    phone:phone,
+    password:hashpass,
+    role:role
+});
+ 
   res.redirect("/adminHome");
+  
 };
 const deleteUser = async (req, res) => {
   try {

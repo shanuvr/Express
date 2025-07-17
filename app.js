@@ -4,13 +4,13 @@ import dotenv from "dotenv";
 import router from "./routes/auth.js"
 import session from "express-session"
 const app = express();
-app.use(express.urlencoded())
+app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 dotenv.config();
 app.use(session({
     secret:'123',
     resave:false,
-    saveUninitialized:true
+    saveUninitialized:false
 }))
 app.use(router)
 app.set('view engine','ejs')
