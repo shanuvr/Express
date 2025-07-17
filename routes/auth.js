@@ -15,6 +15,7 @@ import {insertProduct,showProduct,deleteProduct,editProduct,updateProduct} from 
 import userModel from "../models/user.js";
 import productModel from "../models/product.js";
 
+
 const router = express.Router();
 
 router.get("/", showLogin);
