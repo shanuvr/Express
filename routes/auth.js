@@ -19,6 +19,7 @@ import productModel from "../models/product.js";
 const router = express.Router();
 
 router.get("/", showLogin);
+router.get("/login", showLogin);
 
 router.post("/login", handleLogin);
 

@@ -3,20 +3,30 @@ import productModel from "../models/product.js";
 import bcrypt from "bcrypt";
 
 const showLogin = (req, res) => {
-  res.render("login");
+  const message = req.flash("message");
+  res.render("login",{message});
 };
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
   const userFound = await userModel.findOne({ email });
 
-  if (!userFound) return res.status(404).send('user Not Found');
+   if (!userFound) {
+    req.flash("message", "User not found");
+    return res.redirect("/login");
+  }
 
   const passwordMatched = await bcrypt.compare(password, userFound.password);
 
-  if(passwordMatched&&userFound.active=="disable") res.status(401).send('user is inactive')
+  if(passwordMatched&&userFound.active=="disable") {
+    req.flash("message", "User is Inactive");
+    return res.redirect("/login");
+  }
 
-  if (!passwordMatched) return res.status(401).send('user Not Found');
+  if (!passwordMatched) {
+    req.flash("message", "Incorrect Password");
+    return res.redirect("/login");
+  }
 
   const dataToSet = {
     id: userFound._id,
@@ -29,7 +39,7 @@ const handleLogin = async (req, res) => {
 
   if (userFound.role == "admin" && userFound.active=='enable') {
     req.session.admin = dataToSet;
-    res.redirect("/adminHome");
+    res.redirect("/adminHome",);
   } else {
     req.session.user = dataToSet;
     res.redirect("/userHome");

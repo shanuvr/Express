@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import router from "./routes/auth.js"
 import session from "express-session"
-import flash from 'express-flash'
+import flash from 'connect-flash'
+import MongoStore from "connect-mongo";
 
 const app = express();
 app.use(express.urlencoded({extended:true}))
@@ -12,7 +13,11 @@ dotenv.config();
 app.use(session({
     secret:'123',
     resave:false,
-    saveUninitialized:false
+    saveUninitialized:false,
+    store:MongoStore.create({
+      mongoUrl:process.env.dbURL,
+      collectionName:'sessions'
+    })
 }))
 app.use(flash())
 app.use(router)
