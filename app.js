@@ -6,7 +6,7 @@ import session from "express-session"
 import flash from 'connect-flash'
 import MongoStore from "connect-mongo";
 
-const app = express();
+const app  = express();
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 dotenv.config();
